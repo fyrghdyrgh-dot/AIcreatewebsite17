@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 全栈编程作战室｜需求拆解·联调·上线</title>
+  <meta name="description" content="AI 全栈编程作战室：从前端到后端、数据库、接口联调与上线部署的工具入口合集。支持分类、搜索、收藏与最近使用；纯静态单页可直接部署。" />
+  <meta property="og:title" content="AI 全栈编程作战室" />
+  <meta property="og:description" content="前后端、数据库、联调、测试与部署工具入口合集。支持搜索、收藏与最近使用；纯静态单页。" />
+  <meta property="og:type" content="website" />
+  <style>
+    :root{
+      --bg0:#050711;
+      --bg1:#0B1022;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.08);
+      --line:rgba(148,163,184,.16);
+      --text:#EAF0FF;
+      --muted:rgba(226,232,240,.72);
+      --shadow: 0 22px 80px rgba(0,0,0,.38);
+      --radius:18px;
+      --a:#22c55e;
+      --b:#06b6d4;
+      --c:#a78bfa;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+      line-height:1.55;
+      background:
+        radial-gradient(900px 520px at 10% 10%, rgba(34,197,94,.18), transparent 62%),
+        radial-gradient(760px 440px at 92% 8%, rgba(6,182,212,.14), transparent 60%),
+        radial-gradient(820px 520px at 40% 96%, rgba(167,139,250,.12), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg0));
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1220px;margin:0 auto;padding:14px}
+    .top{
+      position:sticky;
+      top:0;
+      z-index:40;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(5,7,17,.78), rgba(5,7,17,.52));
+      border-bottom: 1px solid rgba(148,163,184,.14);
+    }
+    .top-inner{display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 18px;max-width:1220px;margin:0 auto}
+    .brand{display:flex;align-items:center;gap:10px;min-width:280px}
+    .sig{
+      width:38px;height:38px;border-radius:16px;
+      background:
+        radial-gradient(12px 12px at 30% 28%, rgba(255,255,255,.32), transparent 60%),
+        linear-gradient(135deg, rgba(34,197,94,1), rgba(6,182,212,.94));
+      box-shadow: 0 18px 38px rgba(34,197,94,.16);
+    }
+    .brand-text{display:flex;flex-direction:column;line-height:1.1}
+    .brand-title{font-weight:980;letter-spacing:.2px}
+    .brand-sub{font-size:12px;color:rgba(226,232,240,.72);margin-top:2px}
+    .nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;flex:1;min-width:0}
+    .nav a{
+      font-size:12.5px;
+      color: rgba(226,232,240,.86);
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.16);
+      background: rgba(255,255,255,.06);
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      white-space:nowrap;
+    }
+    .nav a:hover{transform: translateY(-1px); border-color: rgba(34,197,94,.40); background: rgba(255,255,255,.09)}
+    .actions{display:flex;align-items:center;gap:10px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      border:1px solid rgba(148,163,184,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(226,232,240,.92);
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(34,197,94,.38); background: rgba(255,255,255,.09)}
+    .btn.primary{background: linear-gradient(135deg, rgba(34,197,94,1), rgba(6,182,212,.98));border-color: rgba(34,197,94,.46);color:#071018;font-weight:850}
+    .btn.ghost{background:transparent}
+    .hero{
+      border-radius: 24px;
+      background:
+        radial-gradient(860px 420px at 12% 24%, rgba(34,197,94,.44), transparent 56%),
+        radial-gradient(760px 380px at 86% 16%, rgba(6,182,212,.24), transparent 58%),
+        radial-gradient(520px 300px at 40% 86%, rgba(167,139,250,.16), transparent 60%),
+        linear-gradient(135deg, rgba(16,18,37,1), rgba(5,7,17,1));
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(148,163,184,.14);
+      padding: 16px 12px 18px;
+      margin-top: 12px;
+    }
+    .hero-inner{max-width: 1040px; margin: 0 auto; text-align:center}
+    .hero-title{font-size:22px; letter-spacing:.2px; margin:0; font-weight:980; color: rgba(255,255,255,.96)}
+    .hero-sub{margin:8px 0 0;color: rgba(226,232,240,.80);font-size:12.5px}
+    .searchbar{
+      margin: 12px auto 0;
+      display:flex;align-items:center;gap:10px;
+      width: min(820px, 100%);
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(148,163,184,.14);
+      box-shadow: 0 18px 60px rgba(0,0,0,.28);
+    }
+    .searchbar svg{opacity:.92;color:rgba(226,232,240,.90)}
+    .searchbar input{flex:1;border:0;outline:0;background:transparent;color: rgba(255,255,255,.94);font-size: 14px}
+    .searchbar input::placeholder{color: rgba(226,232,240,.70)}
+    .statrow{
+      margin: 12px auto 0;
+      width: min(820px, 100%);
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.16);
+      background: rgba(255,255,255,.06);
+      color: rgba(226,232,240,.86);
+      font-size:12px;
+      user-select:none;
+    }
+    .chip b{color: rgba(255,255,255,.96)}
+    .chip i{font-style:normal;color: rgba(34,197,94,.96)}
+    .quicklinks{margin: 10px auto 0;width: min(920px, 100%);display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+    .quicklinks a{
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(148,163,184,.14);
+      color: rgba(226,232,240,.86);
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      white-space:nowrap;
+    }
+    .quicklinks a:hover{transform: translateY(-1px); border-color: rgba(6,182,212,.40); background: rgba(255,255,255,.09)}
+    .pane{background: rgba(255,255,255,.06);border: 1px solid rgba(148,163,184,.14);border-radius: var(--radius);box-shadow: var(--shadow)}
+    .pane.pad{padding:14px}
+    .layout{display:grid;grid-template-columns: 1fr 360px;gap:18px;margin-top:12px}
+    .anchor{scroll-margin-top: 92px}
+    .recommend{margin-top: 12px;background: rgba(255,255,255,.06);border: 1px solid rgba(148,163,184,.14);border-radius: 22px;box-shadow: var(--shadow);overflow:hidden}
+    .recommend-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding: 10px 12px;border-bottom: 1px solid rgba(148,163,184,.12);color: rgba(226,232,240,.84);font-size:12.5px}
+    .recommend-left{display:flex;flex-direction:column;gap:6px;min-width:0}
+    .recommend-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .seg{
+      padding:6px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.14);
+      background: rgba(255,255,255,.06);color: rgba(226,232,240,.84);
+      font-size:12px;cursor:pointer;user-select:none;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .seg:hover{transform: translateY(-1px); border-color: rgba(34,197,94,.40); background: rgba(255,255,255,.09)}
+    .seg.active{background: rgba(34,197,94,.16); border-color: rgba(34,197,94,.30); color: rgba(255,255,255,.94)}
+    .recommend-desc{font-size:12px;color: rgba(226,232,240,.70);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .recommend-body{padding: 10px 12px 12px}
+    .rec-grid{display:grid;grid-template-columns: repeat(4, minmax(0, 1fr));gap:14px}
+    .rec-card{
+      border: 1px solid rgba(148,163,184,.14);
+      background: rgba(255,255,255,.06);
+      border-radius: 16px;
+      padding: 14px;
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      min-height: 94px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .rec-card:hover{transform: translateY(-2px); border-color: rgba(6,182,212,.38); background: rgba(255,255,255,.08); box-shadow: 0 14px 30px rgba(0,0,0,.22)}
+    .rec-icon{
+      width:46px;height:46px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+      background: linear-gradient(135deg, rgba(34,197,94,.18), rgba(6,182,212,.12));
+      color: rgba(255,255,255,.94);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .rec-icon img{width:100%;height:100%;object-fit:cover;display:block}
+    .rec-icon svg{width:22px;height:22px}
+    .rec-text{min-width:0;display:flex;flex-direction:column;gap:4px}
+    .rec-name{font-weight:980;font-size:13px;color: rgba(255,255,255,.92);line-height:1.2}
+    .rec-sub{font-size:12px;color: rgba(226,232,240,.74);white-space:normal;overflow:visible;line-height:1.35}
+    .rec-hint{margin-top:10px;font-size:12px;color: rgba(226,232,240,.72)}
+    .tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling: touch;gap:8px;padding:10px 12px;border-top:1px solid rgba(148,163,184,.14)}
+    .tab{
+      padding:8px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.14);
+      background: rgba(255,255,255,.06);color: rgba(226,232,240,.86);
+      font-size:12px;white-space:nowrap;cursor:pointer;
+      transition: background .12s ease, border-color .12s ease, transform .12s ease;
+    }
+    .tab:hover{transform: translateY(-1px); border-color: rgba(34,197,94,.40); background: rgba(255,255,255,.09)}
+    .tab.active{background: rgba(6,182,212,.14); border-color: rgba(6,182,212,.30); color: rgba(255,255,255,.94)}
+    .cat-quick{display:flex;gap:10px;padding: 10px 12px 12px;border-top: 1px solid rgba(148,163,184,.14);overflow-x:auto;-webkit-overflow-scrolling: touch}
+    .cat-btn{
+      border: 1px solid rgba(148,163,184,.14);
+      background: rgba(255,255,255,.06);
+      border-radius: 16px;
+      padding: 9px 10px 10px;
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+      cursor:pointer;user-select:none;min-width: 92px;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .cat-btn:hover{transform: translateY(-2px); border-color: rgba(6,182,212,.36); background: rgba(255,255,255,.08); box-shadow: 0 14px 30px rgba(0,0,0,.22)}
+    .cat-btn.active{border-color: rgba(34,197,94,.34); box-shadow: 0 14px 30px rgba(34,197,94,.14)}
+    .cat-ico{
+      width: 34px; height: 34px;border-radius: 12px;display:flex;align-items:center;justify-content:center;
+      background: linear-gradient(135deg, rgba(34,197,94,.18), rgba(6,182,212,.12));
+      color: rgba(255,255,255,.94)
+    }
+    .cat-name{font-size:12px; color: rgba(226,232,240,.84); text-align:center; line-height:1.2}
+    .grid{display:grid;grid-template-columns: repeat(3, minmax(0, 1fr));gap:12px;padding:14px 16px 16px;border-top:1px solid rgba(148,163,184,.14)}
+    .tool{
+      border:1px solid rgba(148,163,184,.14);
+      background: rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      padding:12px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height: 156px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .tool:hover{transform: translateY(-2px); border-color: rgba(34,197,94,.36); background: rgba(255,255,255,.08)}
+    .tool-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .tool-title{font-weight:980;font-size:13.5px;margin:0}
+    .tool-desc{margin:0;color: rgba(226,232,240,.72);font-size:12.5px}
+    .tags{display:flex;flex-wrap:wrap;gap:6px}
+    .tag{
+      font-size:11px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(226,232,240,.78);
+    }
+    .tool-actions{display:flex;align-items:center;gap:8px;margin-top:auto}
+    .mini{
+      padding:8px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.14);
+      background: rgba(255,255,255,.06);color: rgba(226,232,240,.90);
+      font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .mini:hover{transform: translateY(-1px); border-color: rgba(6,182,212,.36); background: rgba(255,255,255,.09)}
+    .mini.primary{background: rgba(34,197,94,.16); border-color: rgba(34,197,94,.30); color: rgba(255,255,255,.96)}
+    .star{
+      width:34px;height:34px;border-radius:999px;border:1px solid rgba(148,163,184,.14);
+      background: rgba(255,255,255,.06);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+      transition: border-color .12s ease, background .12s ease;
+    }
+    .star[aria-pressed="true"]{border-color: rgba(6,182,212,.40); background: rgba(6,182,212,.16)}
+    .rightcol{display:flex;flex-direction:column;gap:12px}
+    .badge{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid rgba(34,197,94,.30);background: rgba(34,197,94,.18);color: rgba(255,255,255,.94)}
+    .muted{color: rgba(226,232,240,.72)}
+    .foot{margin:18px 0 30px;padding:14px 16px;border-top:1px solid rgba(148,163,184,.14);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .foot a{color:rgba(226,232,240,.80)}
+    .foot a:hover{color:rgba(255,255,255,.96)}
+    .divider{width:1px;height:12px;background: rgba(148,163,184,.16)}
+    .toast{
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 18px;
+      background: rgba(2,6,23,.84);
+      border: 1px solid rgba(148,163,184,.16);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: rgba(255,255,255,.94);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease, transform .18s ease;
+      z-index: 60;
+      max-width: calc(100vw - 24px);
+      text-align:center
+    }
+    .toast.show{opacity:1; transform: translateX(-50%) translateY(-6px)}
+    .side-sponsor{
+      position: fixed;
+      left: 14px;
+      top: 116px;
+      z-index: 30;
+      width: 214px;
+      border: 1px solid rgba(148,163,184,.14);
+      border-radius: 18px;
+      background: rgba(255,255,255,.06);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .side-sponsor-head{padding: 10px 10px 0;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .side-sponsor-title{font-weight:980;font-size:13px;color: rgba(255,255,255,.92)}
+    .side-sponsor-body{padding: 10px}
+    .side-sponsor-body p{margin:0;color: rgba(226,232,240,.74);font-size:12px;line-height:1.55}
+    .side-sponsor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .side-sponsor .mini{padding:7px 10px}
+    @media (max-width: 1240px){.side-sponsor{display:none}}
+    .float-cta{position: fixed;right: 18px;bottom: 18px;z-index: 55;display:flex;flex-direction:column;gap:10px;align-items:flex-end}
+    .fab{
+      border-radius: 999px;
+      padding: 12px 14px;
+      background: linear-gradient(135deg, rgba(34,197,94,1), rgba(6,182,212,.98));
+      color: #071018;
+      border: 1px solid rgba(34,197,94,.48);
+      box-shadow: 0 18px 44px rgba(34,197,94,.14);
+      cursor:pointer;
+      font-size: 13px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      user-select:none;
+      font-weight:850;
+      transition: transform .12s ease;
+    }
+    .fab:hover{transform: translateY(-1px)}
+    .fab.secondary{
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.92);
+      border-color: rgba(148,163,184,.16);
+      box-shadow: var(--shadow);
+      font-weight:700;
+    }
+    .inline-ad{grid-column: 1 / -1; border-radius: var(--radius); overflow:hidden}
+    .sections{display:grid;gap:12px;margin-top:14px}
+    .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .section-title{margin:0;font-size:14px;font-weight:980}
+    .section-sub{margin:4px 0 0;color: rgba(226,232,240,.72);font-size:12.5px}
+    @media (max-width: 980px){.layout{grid-template-columns: 1fr}.rightcol{order:-1}.brand{min-width:0}.nav{justify-content:flex-start}}
+    @media (max-width: 860px){.grid{grid-template-columns: repeat(2, minmax(0, 1fr))}.rec-grid{grid-template-columns: repeat(2, minmax(0, 1fr))}}
+    @media (max-width: 720px){.rec-grid{grid-template-columns: repeat(1, minmax(0, 1fr))}}
+    @media (max-width: 520px){.top-inner{flex-wrap:wrap}.brand{width:100%}.nav{width:100%;justify-content:flex-start}.actions{width:100%;justify-content:flex-end}.grid{grid-template-columns: 1fr}.float-cta{right: 12px; bottom: 12px}.hero-title{font-size:22px}}
+  </style>
+</head>
+<body>
+  <aside class="side-sponsor" aria-label="侧边推荐">
+    <div class="side-sponsor-head">
+      <div class="side-sponsor-title">1bgp.com 部署推荐</div>
+      <span class="badge">合作</span>
+    </div>
+    <div class="side-sponsor-body">
+      <p>适合放全栈项目：API、数据库、定时任务与推理服务；资源按需扩容。</p>
+      <div class="side-sponsor-actions">
+        <a class="mini primary" href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_left_primary">方案速览</a>
+        <a class="mini" href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_left_secondary">进入官网</a>
+      </div>
+    </div>
+  </aside>
+
+  <header class="top">
+    <div class="top-inner">
+      <div class="brand">
+        <div class="sig" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-title">AI 全栈编程作战室</div>
+          <div class="brand-sub">拆解 · 联调 · 测试 · 上线</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="页面导航">
+        <a href="#ac2-tools" data-event="ac2_nav_tools">工具库</a>
+        <a href="#ac2-checklist" data-event="ac2_nav_checklist">上线清单</a>
+        <a href="#ac2-qa" data-event="ac2_nav_qa">联调笔记</a>
+      </nav>
+
+      <div class="actions">
+        <button class="btn ghost" id="ac2_showFavs" data-event="ac2_nav_favs" type="button">仅看收藏</button>
+        <button class="btn primary" id="ac2_submitTool" data-event="ac2_nav_host" type="button">部署选型</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero" aria-label="搜索区域">
+      <div class="hero-inner">
+        <h1 class="hero-title">AI 全栈编程作战室</h1>
+        <div class="hero-sub">把“能跑起来”当作第一目标：接口联调、日志定位、部署上线一步到位</div>
+
+        <div class="searchbar" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="2" opacity=".95"/>
+            <path d="M16.2 16.2 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".95"/>
+          </svg>
+          <input id="ac2_q" type="text" autocomplete="off" placeholder="搜索：Next.js / FastAPI / Postgres / Docker / CI…" />
+        </div>
+
+        <div class="statrow" aria-label="统计信息">
+          <span class="chip">当前分类：<b id="ac2_activeCat">全部</b></span>
+          <span class="chip">匹配：<b id="ac2_count">0</b></span>
+          <span class="chip">分类：<b id="ac2_catCount">0</b></span>
+          <span class="chip">工具：<b id="ac2_toolCount">0</b></span>
+          <span class="chip">收藏：<b id="ac2_favCount">0</b> <i>★</i></span>
+        </div>
+
+        <div class="quicklinks" aria-label="快捷入口">
+          <a href="#ac2-checklist" data-event="ac2_hero_checklist">上线清单</a>
+          <a href="#ac2-qa" data-event="ac2_hero_qa">联调笔记</a>
+          <a href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_hero_1bgp">1bgp 部署</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="recommend" aria-label="推荐与最近">
+      <div class="recommend-head">
+        <div class="recommend-left">
+          <div class="recommend-tabs" role="tablist" aria-label="推荐切换">
+            <button class="seg active" type="button" data-rec="recommend" data-event="ac2_rec_tab_recommend" aria-selected="true">全栈常用</button>
+            <button class="seg" type="button" data-rec="recent" data-event="ac2_rec_tab_recent" aria-selected="false">最近打开</button>
+          </div>
+          <div class="recommend-desc" id="ac2_recommendDesc">偏工程化：框架 + 数据库 + 联调 + 部署，按闭环来选工具。</div>
+        </div>
+        <div></div>
+      </div>
+      <div class="recommend-body">
+        <div class="rec-grid" id="ac2_recommendGrid" aria-label="推荐工具列表"></div>
+        <div class="rec-hint" id="ac2_recommendHint" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="layout anchor" id="ac2-tools">
+      <section class="pane" aria-label="工具列表">
+        <div class="tabs" id="ac2_tabs" role="tablist" aria-label="分类筛选"></div>
+        <div class="cat-quick" id="ac2_catQuick" aria-label="分类快捷"></div>
+        <div class="grid" id="ac2_grid" aria-live="polite"></div>
+
+        <div class="foot">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <span class="muted">© <span id="ac2_year"></span> AI 全栈编程作战室</span>
+            <span class="divider" aria-hidden="true"></span>
+            <a href="#" id="ac2_openDisclaimer" data-event="ac2_open_disclaimer">使用说明</a>
+            <span class="divider" aria-hidden="true"></span>
+            <a href="#" id="ac2_openPrivacy" data-event="ac2_open_privacy">隐私说明</a>
+          </div>
+          <div class="muted">外链来自第三方站点，访问与使用请自行判断风险。</div>
+        </div>
+      </section>
+
+      <aside class="rightcol" aria-label="侧栏">
+        <section class="pane pad">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <div>
+              <div style="font-weight:980">1bgp.com 部署推荐</div>
+              <div class="muted" style="font-size:12px;margin-top:4px">云服务器 · 物理服务器 · 容器/算力部署</div>
+            </div>
+            <span class="badge">推荐</span>
+          </div>
+          <div class="muted" style="font-size:12.5px;margin-top:10px;line-height:1.7">
+            适合跑：全栈项目、数据库、任务队列与 API 服务。线上环境建议从日志/监控开始搭。
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <a class="mini primary" href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_cta_1bgp_primary">去官网选型</a>
+            <a class="mini" href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_cta_1bgp_secondary">查看方案</a>
+          </div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="sections">
+      <section class="pane pad anchor" id="ac2-checklist" aria-label="上线清单">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">上线清单（精简版）</h2>
+            <p class="section-sub">先把“能稳定跑”做出来：配置、日志、监控、回滚，一个都别漏。</p>
+          </div>
+        </div>
+        <div class="muted" style="font-size:12.5px;margin-top:10px;line-height:1.75">
+          1) 环境变量分组（dev/staging/prod） 2) 日志可检索 3) 错误告警 4) 数据库备份 5) 版本回滚策略 6) 健康检查与限流 7) 基础压测与成本估算。
+        </div>
+      </section>
+
+      <section class="pane pad anchor" id="ac2-qa" aria-label="联调笔记">
+        <div class="section-head">
+          <div>
+            <h2 class="section-title">联调笔记</h2>
+            <p class="section-sub">当接口出问题：先看请求/响应，再看日志，最后才是猜。</p>
+          </div>
+        </div>
+        <div class="muted" style="font-size:12.5px;margin-top:10px;line-height:1.75">
+          常见坑：CORS、时区、编码、分页边界、幂等与重试、文件上传限制、Nginx 反代超时、容器网络与 DNS。
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="float-cta">
+    <a class="fab" id="ac2_fabMain" href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_fab_1bgp">打开 1bgp 官网</a>
+    <button class="fab secondary" id="ac2_fabTop" data-event="ac2_fab_top" type="button">回到顶部</button>
+  </div>
+
+  <div class="toast" id="ac2_toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const tools = [
+      { name: "Cursor", desc: "项目级 AI 编辑器，适合多文件重构与联动修改。", url: "https://cursor.com", cat: "IDE/编辑器", tags: ["多文件","重构","对话"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fcursor.com&v=5" },
+      { name: "GitHub Copilot", desc: "代码补全与对话助手，适合日常开发与 Review。", url: "https://github.com/features/copilot", cat: "代码助手", tags: ["补全","IDE","对话"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fgithub.com&v=5" },
+      { name: "OpenAI Platform", desc: "OpenAI API 平台，适合接入工具调用与多模态。", url: "https://platform.openai.com", cat: "API/平台", tags: ["API","多模态","工具调用"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fplatform.openai.com&v=5" },
+      { name: "Anthropic Console", desc: "Claude API 控制台，适合长文本与代码分析。", url: "https://console.anthropic.com", cat: "API/平台", tags: ["Claude","API","长文"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fconsole.anthropic.com&v=5" },
+      { name: "Next.js", desc: "React 全栈框架，适合做后台、产品站与 SaaS。", url: "https://nextjs.org", cat: "前端/全栈", tags: ["React","全栈","Web"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fnextjs.org&v=5" },
+      { name: "Vite", desc: "前端构建工具，适合快速搭建与开发体验。", url: "https://vitejs.dev", cat: "前端/全栈", tags: ["构建","前端","开发"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fvitejs.dev&v=5" },
+      { name: "FastAPI", desc: "Python API 框架，适合做后端接口与服务化。", url: "https://fastapi.tiangolo.com", cat: "后端/API", tags: ["Python","API","后端"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Ffastapi.tiangolo.com&v=5" },
+      { name: "Express", desc: "Node.js Web 框架，适合快速搭 API 与中间件。", url: "https://expressjs.com", cat: "后端/API", tags: ["Node","API","中间件"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fexpressjs.com&v=5" },
+      { name: "PostgreSQL", desc: "常用关系型数据库，适合交易/业务数据与复杂查询。", url: "https://www.postgresql.org", cat: "数据库", tags: ["SQL","关系型","稳定"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fwww.postgresql.org&v=5" },
+      { name: "Redis", desc: "缓存与消息基础设施，适合队列、限流与加速。", url: "https://redis.io", cat: "数据库", tags: ["缓存","队列","加速"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fredis.io&v=5" },
+      { name: "Prisma", desc: "TypeScript ORM，适合全栈项目的数据库建模与迁移。", url: "https://www.prisma.io", cat: "数据库", tags: ["ORM","迁移","TS"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fwww.prisma.io&v=5" },
+      { name: "Supabase", desc: "后端即服务：数据库、鉴权、存储一体化。", url: "https://supabase.com", cat: "数据库", tags: ["BaaS","鉴权","存储"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fsupabase.com&v=5" },
+      { name: "Postman", desc: "API 调试与协作工具，适合联调与环境管理。", url: "https://www.postman.com", cat: "联调/调试", tags: ["API","调试","协作"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fwww.postman.com&v=5" },
+      { name: "Insomnia", desc: "轻量 API 调试工具，适合快速验证请求。", url: "https://insomnia.rest", cat: "联调/调试", tags: ["API","请求","环境"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Finsomnia.rest&v=5" },
+      { name: "Hoppscotch", desc: "网页版 API 调试工具，适合快速试接口。", url: "https://hoppscotch.io", cat: "联调/调试", tags: ["Web","API","轻量"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fhoppscotch.io&v=5" },
+      { name: "Docker", desc: "容器化打包与环境一致性工具，适合本地到线上。", url: "https://www.docker.com", cat: "部署/运维", tags: ["容器","环境","部署"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fwww.docker.com&v=5" },
+      { name: "Nginx", desc: "反向代理与网关，适合转发、限流与静态资源。", url: "https://nginx.org", cat: "部署/运维", tags: ["反代","网关","静态"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fnginx.org&v=5" },
+      { name: "Vercel", desc: "前端/全栈部署平台，适合 Next.js 与静态站。", url: "https://vercel.com", cat: "部署/运维", tags: ["部署","前端","全栈"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fvercel.com&v=5" },
+      { name: "Railway", desc: "快速上线服务与数据库，适合小团队与 MVP。", url: "https://railway.app", cat: "部署/运维", tags: ["部署","数据库","服务"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Frailway.app&v=5" },
+      { name: "Sentry", desc: "错误监控与性能追踪，适合线上问题定位。", url: "https://sentry.io", cat: "监控/日志", tags: ["报错","追踪","性能"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fsentry.io&v=5" },
+      { name: "Grafana", desc: "监控看板与可视化，适合指标与告警。", url: "https://grafana.com", cat: "监控/日志", tags: ["监控","看板","告警"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fgrafana.com&v=5" },
+      { name: "GitHub Actions", desc: "CI/CD 自动化：测试、构建、发布流水线。", url: "https://github.com/features/actions", cat: "CI/CD", tags: ["CI","部署","自动化"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fgithub.com%2Ffeatures%2Factions&v=5" },
+      { name: "Playwright", desc: "端到端测试框架，适合网页自动化与回归测试。", url: "https://playwright.dev", cat: "测试", tags: ["E2E","自动化","回归"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fplaywright.dev&v=5" },
+      { name: "Vitest", desc: "Vite 生态的测试框架，适合单元测试。", url: "https://vitest.dev", cat: "测试", tags: ["单测","Vite","JS"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fvitest.dev&v=5" }
+    ];
+
+    tools.unshift(
+      { name: "DeepSeek", desc: "推理与编码表现强的对话入口，可用于排错与代码解释。", url: "https://chat.deepseek.com", cat: "模型/对话", tags: ["推理","编码","中文"], icon: "https://www.aig123.com/wp-content/uploads/2024/05/deepseek.png" },
+      { name: "ChatGPT", desc: "通用对话助手，适合需求澄清、写代码与生成测试用例。", url: "https://chat.openai.com", cat: "模型/对话", tags: ["需求","测试","写代码"], icon: "https://www.iliudar.com/api/icon?url=https%3A%2F%2Fchat.openai.com&v=5" }
+    );
+
+    const state = { activeCat: "全部", q: "", favOnly: false, favs: new Set() };
+    const els = {
+      q: document.getElementById("ac2_q"),
+      recommendGrid: document.getElementById("ac2_recommendGrid"),
+      recommendDesc: document.getElementById("ac2_recommendDesc"),
+      recommendHint: document.getElementById("ac2_recommendHint"),
+      tabs: document.getElementById("ac2_tabs"),
+      catQuick: document.getElementById("ac2_catQuick"),
+      grid: document.getElementById("ac2_grid"),
+      activeCat: document.getElementById("ac2_activeCat"),
+      count: document.getElementById("ac2_count"),
+      catCount: document.getElementById("ac2_catCount"),
+      toolCount: document.getElementById("ac2_toolCount"),
+      favCount: document.getElementById("ac2_favCount"),
+      showFavs: document.getElementById("ac2_showFavs"),
+      year: document.getElementById("ac2_year"),
+      toast: document.getElementById("ac2_toast"),
+      fabTop: document.getElementById("ac2_fabTop"),
+      submitTool: document.getElementById("ac2_submitTool"),
+      openDisclaimer: document.getElementById("ac2_openDisclaimer"),
+      openPrivacy: document.getElementById("ac2_openPrivacy")
+    };
+    const LS_KEY = "aiCoding2:favs";
+    const REC_KEY = "aiCoding2:recent";
+
+    function getCategories(items){const set=new Set(items.map(x=>x.cat));return ["全部",...Array.from(set).sort((a,b)=>a.localeCompare(b,"zh-Hans-CN"))]}
+    function normalize(s){return (s||"").toLowerCase().trim()}
+    function matchesQuery(item,q){if(!q) return true;const hay=[item.name,item.desc,item.cat,...(item.tags||[])].join(" ").toLowerCase();return hay.includes(q)}
+    function shouldShow(item){if(state.activeCat!=="全部"&&item.cat!==state.activeCat) return false;if(state.favOnly&&!state.favs.has(item.name)) return false;if(!matchesQuery(item,state.q)) return false;return true}
+    function escapeHtml(s){return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+    function toast(msg){els.toast.textContent=msg;els.toast.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>els.toast.classList.remove("show"),1600)}
+    function track(el){const ev=el?.dataset?.event;if(!ev) return;window.__events=window.__events||[];window.__events.push({event:ev,ts:Date.now()})}
+    function saveFavs(){localStorage.setItem(LS_KEY,JSON.stringify(Array.from(state.favs)));updateCounts()}
+    function loadFavs(){try{const raw=localStorage.getItem(LS_KEY);if(!raw) return;const arr=JSON.parse(raw);if(Array.isArray(arr)) state.favs=new Set(arr)}catch(_){}} 
+    function loadRecents(){try{const raw=localStorage.getItem(REC_KEY);if(!raw) return [];const arr=JSON.parse(raw);return Array.isArray(arr)?arr.filter(Boolean):[]}catch(_){return []}}
+    function saveRecents(list){try{localStorage.setItem(REC_KEY,JSON.stringify(list.slice(0,12)))}catch(_){}} 
+    function pushRecent(name){if(!name) return;const list=loadRecents();const next=[name,...list.filter(x=>x!==name)].slice(0,12);saveRecents(next)}
+    function updateCounts(filtered){
+      const categories=getCategories(tools);
+      els.catCount.textContent=String(Math.max(0,categories.length-1));
+      els.toolCount.textContent=String(tools.length);
+      els.favCount.textContent=String(state.favs.size);
+      if(typeof filtered==="number") els.count.textContent=String(filtered);
+    }
+    function iconSvg(cat){
+      const common={
+        "模型/对话":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 18a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H11l-4 3v-3H7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`,
+        "代码助手":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 18 22 12 16 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 6 2 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        "IDE/编辑器":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="2"/></svg>`,
+        "API/平台":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+        "前端/全栈":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" stroke="currentColor" stroke-width="2"/><path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+        "后端/API":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 19V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 19V9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M12 19V7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 19v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+        "数据库":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3" stroke="currentColor" stroke-width="2"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6" stroke="currentColor" stroke-width="2"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" stroke="currentColor" stroke-width="2"/></svg>`,
+        "联调/调试":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M10 14 21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 18a4 4 0 0 1 0-8h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+        "部署/运维":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round" opacity=".85"/></svg>`,
+        "监控/日志":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 19V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 15l3-6 3 4 2-3 2 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+        "CI/CD":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 7h10v10H7V7Z" stroke="currentColor" stroke-width="2"/><path d="M4 12h3m10 0h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+        "测试":`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 4h10M9 4v3l-4 7a6 6 0 0 0 5 9h4a6 6 0 0 0 5-9l-4-7V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      };
+      return common[cat]||`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" stroke="currentColor" stroke-width="2"/><path d="M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+    }
+    function toolIconSvg(){return iconSvg("代码助手")}
+    function toolIconHtml(tool){if(tool?.icon){return `<img src="${escapeHtml(tool.icon)}" alt="${escapeHtml(tool.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-icon-name="${escapeHtml(tool.name)}" />`;}return toolIconSvg()}
+    function attachIconFallback(root){if(!root) return;root.querySelectorAll('img[data-icon-name]').forEach(img=>{img.addEventListener("error",()=>{const wrap=img.parentElement;if(!wrap) return;wrap.innerHTML=toolIconSvg()},{once:true})})}
+    function renderTabs(){
+      const categories=getCategories(tools);
+      els.tabs.innerHTML=categories.map(cat=>{
+        const active=cat===state.activeCat?"active":"";
+        return `<button class="tab ${active}" type="button" role="tab" aria-selected="${active?"true":"false"}" data-cat="${escapeHtml(cat)}" data-event="ac2_tab_${escapeHtml(cat)}">${escapeHtml(cat)}</button>`;
+      }).join("");
+    }
+    function renderCatQuick(){
+      const categories=getCategories(tools).filter(x=>x!=="全部").slice(0,16);
+      els.catQuick.innerHTML=categories.map(cat=>{
+        const active=cat===state.activeCat?"active":"";
+        return `<button class="cat-btn ${active}" type="button" data-cat="${escapeHtml(cat)}" data-event="ac2_cat_${escapeHtml(cat)}"><span class="cat-ico">${iconSvg(cat)}</span><span class="cat-name">${escapeHtml(cat)}</span></button>`;
+      }).join("");
+    }
+    function renderInlineAd(){
+      return `<div class="pane inline-ad" role="region" aria-label="信息流推荐"><div style="padding:12px 12px 0;display:flex;align-items:center;justify-content:space-between;gap:10px"><span class="muted" style="font-size:12px">合作推荐</span><span class="badge">1bgp</span></div><div style="padding:12px"><div style="font-weight:980">1bgp.com 云服务器 / 物理服务器</div><div class="muted" style="margin-top:6px;font-size:12.5px;line-height:1.6">适合部署全栈项目、数据库与 API；从测试到上线按需扩容。</div><div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap"><a class="mini primary" href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_ad_feed_click">了解方案</a><a class="mini" href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_ad_feed_go">进入官网</a></div></div></div>`;
+    }
+    function renderGrid(){
+      const list=tools.filter(shouldShow);
+      els.activeCat.textContent=state.activeCat;
+      updateCounts(list.length);
+      if(list.length===0){
+        els.grid.innerHTML=`<div class="tool" style="grid-column:1 / -1"><div class="tool-title">没有匹配结果</div><p class="tool-desc">试试切换分类、精简关键词，或关闭“仅看收藏”。</p><div class="tool-actions"><button class="mini primary" type="button" id="ac2_resetFilters" data-event="ac2_reset_filters">重置筛选</button><a class="mini" href="https://www.1bgp.com/" target="_blank" rel="noopener noreferrer" data-event="ac2_cta_from_empty">看看部署方案</a></div></div>`;
+        document.getElementById("ac2_resetFilters").addEventListener("click",(e)=>{track(e.currentTarget);state.activeCat="全部";state.q="";state.favOnly=false;els.q.value="";els.showFavs.textContent="仅看收藏";renderTabs();renderCatQuick();renderGrid();toast("已重置")});
+        return;
+      }
+      const nodes=[];const insertAt=Math.min(6,list.length);
+      list.forEach((item,idx)=>{
+        if(idx===insertAt) nodes.push(renderInlineAd());
+        const fav=state.favs.has(item.name);
+        nodes.push(`<article class="tool"><div class="tool-head"><div><h3 class="tool-title">${escapeHtml(item.name)}</h3><p class="tool-desc">${escapeHtml(item.desc)}</p></div><button class="star" type="button" aria-label="收藏" aria-pressed="${fav?"true":"false"}" data-fav="${escapeHtml(item.name)}" data-event="ac2_fav_toggle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 17.3 6.2 20.6l1.1-6.6L2.6 9.7l6.6-1 2.8-6 2.8 6 6.6 1-4.7 4.3 1.1 6.6L12 17.3Z" stroke="currentColor" stroke-width="2" opacity="${fav?"1":".7"}" fill="${fav?"rgba(6,182,212,.18)":"transparent"}"/></svg></button></div><div class="tags"><span class="tag">${escapeHtml(item.cat)}</span>${(item.tags||[]).slice(0,3).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join("")}</div><div class="tool-actions"><a class="mini primary" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" data-event="ac2_tool_open" data-tool="${escapeHtml(item.name)}">打开</a><button class="mini" type="button" data-event="ac2_tool_copy" data-copy="${escapeHtml(item.name)}｜${escapeHtml(item.url)}">复制链接</button></div></article>`);
+      });
+      els.grid.innerHTML=nodes.join("");
+      els.grid.querySelectorAll("[data-fav]").forEach(btn=>{btn.addEventListener("click",(e)=>{track(e.currentTarget);const name=e.currentTarget.getAttribute("data-fav");if(!name) return;if(state.favs.has(name)) state.favs.delete(name); else state.favs.add(name);saveFavs();renderGrid();toast(state.favs.has(name)?"已收藏":"已取消")})});
+      els.grid.querySelectorAll("[data-copy]").forEach(btn=>{btn.addEventListener("click",async (e)=>{track(e.currentTarget);const text=e.currentTarget.getAttribute("data-copy")||"";try{await navigator.clipboard.writeText(text);toast("已复制")}catch(_){const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();toast("已复制")}})});
+      els.grid.querySelectorAll('a[data-event="ac2_tool_open"]').forEach(a=>{a.addEventListener("click",(e)=>{track(e.currentTarget);const name=e.currentTarget.getAttribute("data-tool")||"";pushRecent(name)})});
+    }
+    function renderRecommend(mode){
+      const prefer=["Cursor","GitHub Copilot","Next.js","FastAPI","PostgreSQL","Docker","Postman","GitHub Actions","Sentry","Vercel","Railway","DeepSeek"];
+      let list=[];
+      if(mode==="recent"){
+        const recentNames=loadRecents();
+        list=recentNames.map(n=>tools.find(t=>t.name===n)).filter(Boolean);
+        els.recommendDesc.textContent="最近打开过的入口（只保存在当前浏览器）。";
+        els.recommendHint.textContent=list.length?"":"暂无记录。点击任意工具后会自动出现。";
+      }else{
+        const picked=[];
+        for(const n of prefer){const t=tools.find(x=>x.name===n);if(t) picked.push(t);}
+        for(const t of tools){if(!picked.some(x=>x.name===t.name)) picked.push(t);}
+        list=picked;
+        els.recommendDesc.textContent="全栈常用入口 + 全量工具（图标加载失败会自动兜底）。";
+        els.recommendHint.textContent="";
+      }
+      els.recommendGrid.innerHTML=list.map(t=>`<a class="rec-card" href="${escapeHtml(t.url)}" target="_blank" rel="noopener noreferrer" data-event="ac2_rec_open_${escapeHtml(t.name)}" data-tool="${escapeHtml(t.name)}"><span class="rec-icon">${toolIconHtml(t)}</span><span class="rec-text"><span class="rec-name">${escapeHtml(t.name)}</span><span class="rec-sub">${escapeHtml(t.desc||"")}</span></span></a>`).join("");
+      attachIconFallback(els.recommendGrid);
+      els.recommendGrid.querySelectorAll("a").forEach(a=>{a.addEventListener("click",(e)=>{track(e.currentTarget);const name=e.currentTarget.getAttribute("data-tool")||"";pushRecent(name)})});
+    }
+    function setActiveCat(cat){state.activeCat=cat;renderTabs();renderCatQuick();renderGrid()}
+    function init(){
+      loadFavs();
+      els.year.textContent=String(new Date().getFullYear());
+      renderRecommend("recommend");
+      renderTabs();
+      renderCatQuick();
+      renderGrid();
+      updateCounts(tools.length);
+      const recTabs=document.querySelectorAll("[data-rec]");
+      recTabs.forEach(btn=>{btn.addEventListener("click",(e)=>{track(e.currentTarget);const mode=e.currentTarget.getAttribute("data-rec")||"recommend";recTabs.forEach(x=>{const active=x===e.currentTarget;x.classList.toggle("active",active);x.setAttribute("aria-selected",active?"true":"false")});renderRecommend(mode)})});
+      els.q.addEventListener("input",()=>{state.q=normalize(els.q.value);renderGrid()});
+      els.tabs.addEventListener("click",(e)=>{const btn=e.target.closest("[data-cat]");if(!btn) return;track(btn);const cat=btn.getAttribute("data-cat");if(!cat) return;setActiveCat(cat)});
+      els.catQuick.addEventListener("click",(e)=>{const btn=e.target.closest("[data-cat]");if(!btn) return;track(btn);const cat=btn.getAttribute("data-cat");if(!cat) return;setActiveCat(cat)});
+      els.showFavs.addEventListener("click",(e)=>{track(e.currentTarget);state.favOnly=!state.favOnly;els.showFavs.textContent=state.favOnly?"查看全部":"仅看收藏";renderGrid();toast(state.favOnly?"仅显示收藏":"显示全部")});
+      els.fabTop.addEventListener("click",(e)=>{track(e.currentTarget);window.scrollTo({top:0,behavior:"smooth"})});
+      els.submitTool.addEventListener("click",(e)=>{track(e.currentTarget);window.open("https://www.1bgp.com/","_blank","noopener,noreferrer")});
+      els.openDisclaimer.addEventListener("click",(e)=>{e.preventDefault();track(e.currentTarget);toast("使用说明：本站为工具入口与工程备忘整理，内容仅供参考。")});
+      els.openPrivacy.addEventListener("click",(e)=>{e.preventDefault();track(e.currentTarget);toast("隐私说明：收藏/最近使用仅保存在你的浏览器本地，不会上传。")});
+    }
+    init();
+  </script>
+</body>
+</html>
